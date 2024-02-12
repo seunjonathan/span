@@ -1,0 +1,17 @@
+{
+	"name": "Restrict Access",
+	"properties": {
+		"content": {
+			"query": "use master\nCREATE LOGIN [firstname.lastname@seaspan.com] FROM EXTERNAL PROVIDER;\nGO\n\n-- Please change <db-name>, [user1] & login to the required values\nuse <db-name>\nCREATE USER [user1] FROM LOGIN [firstname.lastname@seaspan.com]\nGO\n\n-- Please change <schemaname> in dbrole_schemaname_reader to required schema\nIF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name='dbrole_schemaname_reader' AND type = 'R')\nBEGIN \n    CREATE ROLE dbrole_schemaname_reader;\nEND\n\n-- Grant permission to multiple schemas\nGRANT SELECT ON SCHEMA :: schemaname TO dbrole_schemaname_reader \n\n-- Then grant users to this role\nALTER ROLE dbrole_schemaname_reader ADD MEMBER user1\n\n--ALTER ROLE dbrole_schemaname_reader DROP MEMBER user1;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "test",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "PPA Backfill view",
+	"properties": {
+		"content": {
+			"query": "-- Create database if it does not exist\nIF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'output')\nBEGIN\n    CREATE DATABASE [output]\nEND\nGO\n\nUSE output\n\n-- Create schema if it does not exist\nIF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'ppa')\nBEGIN\n    EXEC ('CREATE SCHEMA ppa;');\nEND\nGO\n\n-- Create file format if it does not exist\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'DeltaLakeFormat')\nBEGIN\n    CREATE EXTERNAL FILE FORMAT DeltaLakeFormat WITH ( FORMAT_TYPE = DELTA );\nEND\nGO\n\n\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'DeltaLakeStorage')\nBEGIN\n    CREATE EXTERNAL DATA SOURCE DeltaLakeStorage\n    WITH (\n        LOCATION = 'abfss://test@adlssmgdev.dfs.core.windows.net'\n    )\nEND\nGO\n\n-- This script will create views for all of PPA tables names listed\n---------------------------------------------------------------------------\n\n-- DROP TABLE IF EXISTS #tmp_data\n\n;WITH cte_data AS (\n    SELECT * FROM (\n        VALUES\n        ('PPA_Customer_Backfill'),\n        ('PPA_Locations_Backfill'),\n        ('PPA_Pilots_Backfill'),\n        ('PPA_Ships_Backfill'),\n        ('PPA_Jobs_Backfill')\n    ) AS t(objname)\n),\ncte_maindata AS (\n    SELECT\n        ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS rownum,\n        c.objname,\n        CASE\n            WHEN c.objname IN ('PPA_Customer_Backfill', 'PPA_Pilots_Backfill','PPA_Ships_Backfill','PPA_Locations_Backfill') THEN\n                CAST('CREATE OR ALTER VIEW [ppa].[vw_DIM_' + c.objname + ']\n                AS SELECT *\n                FROM  \n                    OPENROWSET(\n                        BULK ''output/' + c.objname + ''',\n                        DATA_SOURCE = ''DeltaLakeStorage'',\n                        FORMAT=''DELTA''\n                    ) ai' AS NVARCHAR(2000))\n            ELSE\n                CAST('CREATE OR ALTER VIEW [ppa].[vw_FACT_' + c.objname + ']\n                AS SELECT *\n                FROM  \n                    OPENROWSET(\n                        BULK ''output/' + c.objname + ''',\n                        DATA_SOURCE = ''DeltaLakeStorage'',\n                        FORMAT=''DELTA''\n                    ) ai' AS NVARCHAR(2000))\n        END AS ViewScript\n    FROM cte_data c\n)\nSELECT *\nINTO #tmp_data\nFROM cte_maindata\n\nDECLARE @viewname NVARCHAR(1000);\nDECLARE @i INT = 1\nDECLARE @tablerecords INT = (SELECT COUNT(*) FROM #tmp_data)\n\nWHILE @i <= @tablerecords\nBEGIN\n    SELECT @viewname = ViewScript FROM #tmp_data WHERE rownum = @i\n    PRINT (@viewname)\n    EXEC (@viewname)\n    SET @i += 1;\nEND;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "output",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,18 @@
+{
+	"name": "Create Telemetry Gold Views",
+	"properties": {
+		"description": "This SQL script is used to create the gold view for telemetry data. Currently only Maretron data is available.",
+		"content": {
+			"query": "-- Create database if it does not exist\nIF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'gold')\nBEGIN\n    CREATE DATABASE [gold]\nEND\nGO\n\n-- Create schema if it does not exist\nIF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'telemetry')\nBEGIN\n    -- Create Schema has to be the first statement to work - so we wrap it in EXEC\n    EXEC ('CREATE SCHEMA telemetry;');\nEND\nGO\n\n\nCREATE OR ALTER VIEW [telemetry].[vw_REPORT_LAST_KNOWN_VESSEL_LOCATION]\nAS SELECT \n\tvessel_name,\n\tTIM_0,\n\tTimestamp_UTC,\n    Timestamp_PST,\n    Lat,\n\tLong,\n    CASE\n        WHEN DATEDIFF(MINUTE, TIMESTAMP_UTC, GETUTCDATE()) > 60 THEN 'Offline'\n        ELSE 'Online'\n    END as 'Status',\n\t'Maretron Telemetry' as 'System' \n    from (\n        select\n            *,\n            row_number() over (partition by vessel_name order by Timestamp_UTC desc) as row_num\n        from [silver].[maretron].[vw_Telemetry]\n        where Lat is not null and Long is not null\n        ) last_reported_position\n    where row_num = 1\nGO\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "gold",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

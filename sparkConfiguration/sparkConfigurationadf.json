@@ -1,0 +1,31 @@
+{
+	"name": "sparkConfigurationadf",
+	"properties": {
+		"description": "spark pool config with environment variables\n",
+		"configs": {
+			"STORAGE_ACCOUNT_NAME": "adlssmgdev",
+			"SPTENANTID": "02c4017c-d606-4d35-b067-aff89e9069eb",
+			"SPCLIENTID": "c26b4317-0c93-48cc-b1ac-5696b8778e5e",
+			"SPSECRET": "spSecret",
+			"LAWWID": "logs-law-WID",
+			"CONNECTION_STRING": "ADLSSMG-ACCESSKEY",
+			"SPSCOPE": "adlsedwdevtest-scope",
+			"LOGS_NAME": "TOWWORKSv2_DEV_LOGS",
+			"LAWPK": "logs-law-PrimaryKey"
+		},
+		"created": "2023-07-11T00:06:17.5470000-07:00",
+		"createdBy": "Venkat.Nooney@seaspan.com",
+		"annotations": [],
+		"configMergeRule": {
+			"artifact.currentOperation.STORAGE_ACCOUNT_NAME": "replace",
+			"artifact.currentOperation.SPTENANTID": "replace",
+			"artifact.currentOperation.SPCLIENTID": "replace",
+			"artifact.currentOperation.SPSECRET": "replace",
+			"artifact.currentOperation.LAWWID": "replace",
+			"artifact.currentOperation.CONNECTION_STRING": "replace",
+			"artifact.currentOperation.SPSCOPE": "replace",
+			"artifact.currentOperation.LOGS_NAME": "replace",
+			"artifact.currentOperation.LAWPK": "replace"
+		}
+	}
+}

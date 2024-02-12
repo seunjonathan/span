@@ -1,0 +1,18 @@
+{
+	"name": "Create PPA Location-Region Mapping",
+	"properties": {
+		"description": "To support the Market Share dashboard, a mapping of location to region is needed. This information is manually provided via a CSV file.",
+		"content": {
+			"query": "-- Requirements: https://dev.azure.com/seaspan-edw/SMG-DataOps/_workitems/edit/2923\n-- Notes:\n--  There were two rows in the source data that contained the word \"B\". The quotes caused\n--  problems upon query and so were removed. \n\nuse silver;\nGO\n\nCREATE OR ALTER VIEW [ppa].[vw_DIM_Regions]\nAS SELECT \n    *\nFROM  \n    OPENROWSET(\n        BULK 'https://adlssmgdev.dfs.core.windows.net/processed/silver/PPA/Regions',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE\n    ) \nWITH (\n    [PPA_Location_Name] VARCHAR(256) COLLATE LATIN1_GENERAL_100_CI_AS_SC_UTF8,\n    [PPA_Region] VARCHAR(256) COLLATE LATIN1_GENERAL_100_CI_AS_SC_UTF8\n)\n    AS [r]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "silver",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

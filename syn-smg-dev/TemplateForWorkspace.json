@@ -1,0 +1,234 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "syn-smg-dev"
+		},
+		"syn-smg-dev-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'syn-smg-dev-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:syn-smg-dev.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"LS_ADLS_SMG_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlssmgdev.dfs.core.windows.net/"
+		},
+		"syn-smg-dev-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsedwdev.dfs.core.windows.net"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/LS_ADLS_SMG')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "This linked service connects to the adlssmgdev storage account.",
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('LS_ADLS_SMG_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/syn-smg-dev-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('syn-smg-dev-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/syn-smg-dev-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('syn-smg-dev-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				},
+				"managedVirtualNetwork": {
+					"type": "ManagedVirtualNetworkReference",
+					"referenceName": "default"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Create Towworksv2 views')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- CREATE DATABASE silver\n-- USE silver\n\n-- CREATE EXTERNAL FILE FORMAT DeltaLakeFormat WITH ( FORMAT_TYPE = DELTA );\n\n-- -- DROP EXTERNAL DATA SOURCE DeltaLakeStorage\n-- CREATE EXTERNAL DATA SOURCE DeltaLakeStorage \n-- WITH (\n-- \tLOCATION = 'abfss://processed@adlssmgdev.dfs.core.windows.net'\n--)\n\n-- This script will create views for all of Towworksv2 tables names listed\n---------------------------------------------------------------------------\n\n-- DROP TABLE IF EXISTS #tmp_data\n\n;WITH cte_data AS (\n    SELECT * FROM (\n        VALUES\n        ('APINVOICES'),\n        ('ARINVOICES'),\n        ('ASSET'),\n        ('BASEAUDIT'),\n        ('CARGO'),\n        ('COMPANY'),\n        ('CONTRACTS'),\n        ('CUSTOMCOLORS'),\n        ('DELETEDEVENTS'),\n        ('DELETIONAUDIT'),\n        ('ETAESTIMATES'),\n        ('EVENT'),\n        ('GLCODES'),\n        ('LOCATION'),\n        ('LOGISTICSORDERS'),\n        ('LOGISTICSORDERSLINEITEMCARGO'),\n        ('LOGISTICSORDERSLINEITEMS'),\n        ('RATEESCALATORS'),\n        ('RATES'),\n        ('ROUTEPARTIES'),\n        ('TRANSACTIONS'),\n        ('UNITOFMEASURE'),\n        ('WORKORDERLINKS'),\n        ('WORKORDERS'),\n        ('WORKORDERSASUPPLEMENT'),\n        ('WORKORDERSTATUS'),\n        ('WORKTASKS')\n    ) AS t(objname)\n),\ncte_maindata AS (\n    SELECT\n        ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS rownum,\n        c.objname,\n        CASE\n            WHEN c.objname IN ('ASSET', 'CARGO','COMPANY','CUSTOMCOLORS','LOCATION','ETAESTIMATES','UNITOFMEASURE','WORKORDERSTATUS') THEN\n                CAST('CREATE OR ALTER VIEW [towworks].[vw_DIM_' + c.objname + ']\n                AS SELECT *\n                FROM  \n                    OPENROWSET(\n                        BULK ''silver/TOWWORKSv2/' + c.objname + ''',\n                        DATA_SOURCE = ''DeltaLakeStorage'',\n                        FORMAT=''DELTA''\n                    ) ai' AS NVARCHAR(2000))\n            ELSE\n                CAST('CREATE OR ALTER VIEW [towworks].[vw_FACT_' + c.objname + ']\n                AS SELECT *\n                FROM  \n                    OPENROWSET(\n                        BULK ''silver/TOWWORKSv2/' + c.objname + ''',\n                        DATA_SOURCE = ''DeltaLakeStorage'',\n                        FORMAT=''DELTA''\n                    ) ai' AS NVARCHAR(2000))\n        END AS ViewScript\n    FROM cte_data c\n)\nSELECT *\nINTO #tmp_data\nFROM cte_maindata\n\nDECLARE @viewname NVARCHAR(1000);\nDECLARE @i INT = 1\nDECLARE @tablerecords INT = (SELECT COUNT(*) FROM #tmp_data)\n\nWHILE @i <= @tablerecords\nBEGIN\n    SELECT @viewname = ViewScript FROM #tmp_data WHERE rownum = @i\n    PRINT (@viewname)\n    EXEC (@viewname)\n    SET @i += 1;\nEND;",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "silver",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Provision Silver database')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "\n--CREATE DATABASE silver\n\nUSE silver\nGO\n\n-- CREATE SCHEMA [towworks]\n\n\n-- DROP VIEW [towworks].vw_TRANSACTIONS\n\nCREATE OR ALTER VIEW [towworks].vw_TRANSACTIONS\nAS SELECT *\nFROM  \n    OPENROWSET(\n        BULK 'abfss://processed@adlssmgdev.dfs.core.windows.net/silver/TOWWORKSv2/TRANSACTIONS',\n        -- DATA_SOURCE = 'DeltaLakeStorage',\n        FORMAT='DELTA'\n    ) trans\nGO\n\n\n-- DROP VIEW [towworks].vw_ARINVOICES\n\nCREATE OR ALTER VIEW [towworks].vw_ARINVOICES\nAS SELECT *\nFROM  \n    OPENROWSET(\n        BULK 'abfss://processed@adlssmgdev.dfs.core.windows.net/silver/TOWWORKSv2/ARINVOICES',\n        -- DATA_SOURCE = 'DeltaLakeStorage',\n        FORMAT='DELTA'\n    ) trans\nGO\n\n\n-- DROP VIEW [towworks].vw_GLCODES\n\nCREATE OR ALTER VIEW [towworks].vw_GLCODES\nAS SELECT *\nFROM  \n    OPENROWSET(\n        BULK 'abfss://processed@adlssmgdev.dfs.core.windows.net/silver/TOWWORKSv2/GLCODES',\n        -- DATA_SOURCE = 'DeltaLakeStorage',\n        FORMAT='DELTA'\n    ) trans\nGO\n\n\n\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "silver",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/MPE_ADLS_SYN_SMG')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "/subscriptions/e2764bf7-bdda-4887-aa05-42f41431e1c1/resourceGroups/rg-smg-common-dev/providers/Microsoft.Storage/storageAccounts/adlssmgdev",
+				"groupId": "dfs",
+				"fqdns": [
+					"adlssmgdev.dfs.core.windows.net"
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/synapse-ws-custstgacct--syn-smg-dev-adlsedwdev')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "/subscriptions/e2764bf7-bdda-4887-aa05-42f41431e1c1/resourceGroups/rg-edw-dev/providers/Microsoft.Storage/storageAccounts/adlsedwdev",
+				"groupId": "dfs",
+				"fqdns": [
+					"adlsedwdev.dfs.core.windows.net"
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/synapse-ws-sql--syn-smg-dev')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "/subscriptions/e2764bf7-bdda-4887-aa05-42f41431e1c1/resourceGroups/rg-smg-common-dev/providers/Microsoft.Synapse/workspaces/syn-smg-dev",
+				"groupId": "sql",
+				"fqdns": [
+					"syn-smg-dev.f07605f0-66f1-46a6-9f35-203a35846d22.sql.azuresynapse.net"
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/synapse-ws-sqlOnDemand--syn-smg-dev')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "/subscriptions/e2764bf7-bdda-4887-aa05-42f41431e1c1/resourceGroups/rg-smg-common-dev/providers/Microsoft.Synapse/workspaces/syn-smg-dev",
+				"groupId": "sqlOnDemand",
+				"fqdns": [
+					"syn-smg-dev-ondemand.f07605f0-66f1-46a6-9f35-203a35846d22.sql.azuresynapse.net"
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		}
+	]
+}
