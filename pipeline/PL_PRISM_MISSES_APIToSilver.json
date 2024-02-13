@@ -1,0 +1,618 @@
+{
+	"name": "PL_PRISM_MISSES_APIToSilver",
+	"properties": {
+		"description": "Gets all targets data since last watermark. That data is larger in volume and returns data in pagination. If there are multiple pages, extracts all of them in loop. Additional note - The date format used is datetime with 'Z' format which is mandatory for the ingestion to work",
+		"activities": [
+			{
+				"name": "Prism RestAPI Secret Key",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": {
+						"value": "@concat(pipeline().globalParameters.SMG_KeyVault,'/secrets/TOPS-RESTAPI-Secret?api-version=7.0')",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			},
+			{
+				"name": "Prism RestAPI AccessID",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": {
+						"value": "@concat(pipeline().globalParameters.SMG_KeyVault,'/secrets/TOPS-RESTACCESSID?api-version=7.0')",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			},
+			{
+				"name": "Retrieve Table Configs",
+				"description": "This activity reads the configuration from the cfgBronze ATS for partition PRISM. The query needs to return all tables accessed via the MISSES endpoint.",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Prism RestAPI Secret Key",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Prism RestAPI AccessID",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureTableSource",
+						"azureTableSourceQuery": {
+							"value": "PartitionKey eq 'PRISM' and Endpoint eq 'MISSES' and Skip_Flag eq false",
+							"type": "Expression"
+						},
+						"azureTableSourceIgnoreTableNotFound": false
+					},
+					"dataset": {
+						"referenceName": "DS_cfgBronze_ATS",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Set next_Watermark_End",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Retrieve Table Configs",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "vnext_Watermark_End",
+					"value": {
+						"value": "@utcNow()",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Ingest and Curate Each table",
+				"description": "This activity will\n(1) Call the TOPS Prism Misses API to fetch the latest JSON data for the table.",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Set next_Watermark_End",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Retrieve Table Configs').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Lookup Misses JSON",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "JsonSource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET",
+										"additionalHeaders": {
+											"value": "Authorization: Credential=@{activity('Prism RestAPI AccessID').output.value}, Key=@{activity('Prism RestAPI Secret Key').output.value}",
+											"type": "Expression"
+										},
+										"requestTimeout": ""
+									},
+									"formatSettings": {
+										"type": "JsonReadSettings"
+									}
+								},
+								"dataset": {
+									"referenceName": "DS_MISSES_Raw_JSON",
+									"type": "DatasetReference",
+									"parameters": {
+										"pDataset": {
+											"value": "@item().QueryParameter",
+											"type": "Expression"
+										},
+										"pDateToPullFrom": {
+											"value": "@formatDateTime(item().Watermark_End,'yyyy-MM-ddTHH:mm:ss.fffffZ')",
+											"type": "Expression"
+										}
+									}
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Set total No pages",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Lookup Misses JSON",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "vTotalNoOfPages",
+								"value": {
+									"value": "@string(activity('Lookup Misses JSON').output.value[0].total_pages)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "If Total no of pages greater than zero",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Set total No pages",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@and(\ngreater(int(variables('vTotalNoOfPages')),0),\ncontains(string(activity('Lookup Misses JSON').output.value), '\"statistics\":{\"')\n)",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Extract PRISM MISSES to landing Bronze Folder",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "RestSource",
+												"httpRequestTimeout": "00:01:40",
+												"requestInterval": "00.00:00:00.010",
+												"requestMethod": "GET",
+												"additionalHeaders": {
+													"Authorization": {
+														"value": "Credential=@{activity('Prism RestAPI AccessID').output.value}, Key=@{activity('Prism RestAPI Secret Key').output.value}",
+														"type": "Expression"
+													},
+													"page": "{page}"
+												},
+												"paginationRules": {
+													"AbsoluteUrl.{page}": "RANGE:1::",
+													"MaxRequestNumber": {
+														"value": "@string(variables('vTotalNoOfPages'))",
+														"type": "Expression"
+													}
+												}
+											},
+											"sink": {
+												"type": "JsonSink",
+												"storeSettings": {
+													"type": "AzureBlobFSWriteSettings"
+												},
+												"formatSettings": {
+													"type": "JsonWriteSettings",
+													"filePattern": "arrayOfObjects"
+												}
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "DS_MISSES_REST",
+												"type": "DatasetReference",
+												"parameters": {
+													"pDataset": {
+														"value": "@item().QueryParameter",
+														"type": "Expression"
+													},
+													"pDateToPullFrom": {
+														"value": "@formatDateTime(item().Watermark_End,'yyyy-MM-ddTHH:mm:ss.fffffZ')",
+														"type": "Expression"
+													},
+													"pPage": "{page}"
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "DS_MISSES_Bronze_JSON",
+												"type": "DatasetReference",
+												"parameters": {
+													"pFileName": {
+														"value": "@concat(item().QueryParameter,'_', formatDateTime(addhours(variables('vnext_Watermark_End'),-8), 'yyyy'), formatDateTime(addhours(variables('vnext_Watermark_End'),-8), 'MM'), formatDateTime(addhours(variables('vnext_Watermark_End'),-8), 'dd'),'_' , formatDateTime(addhours(variables('vnext_Watermark_End'),-8), 'hh'), formatDateTime(addhours(variables('vnext_Watermark_End'),-8), 'mm'), formatDateTime(addhours(variables('vnext_Watermark_End'),-8), 'ss'), '.json')",
+														"type": "Expression"
+													},
+													"pDirectory": {
+														"value": "@item().RowKey",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									},
+									{
+										"name": "Curate Prism Json",
+										"description": "This step transforms the raw JSON data into a data in parquet format in silver layer",
+										"type": "DatabricksSparkPython",
+										"dependsOn": [
+											{
+												"activity": "Extract PRISM MISSES to landing Bronze Folder",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"pythonFile": {
+												"value": "dbfs:/FileStore/pyspark-scripts/curate_json.py",
+												"type": "Expression"
+											},
+											"parameters": [
+												"@concat('-t',item().RowKey)",
+												"-sbronze",
+												"-dsilver",
+												"@concat('-c',item().PartitionKey)",
+												"@concat('-x',item().Flatten_Instructions)",
+												"@concat('-i',item().Incremental)",
+												"@concat('-k',item().Primary_Key)",
+												"@concat('-w',item().Watermark_Column)",
+												"@concat('-f',item().Field_Types)"
+											]
+										},
+										"linkedServiceName": {
+											"referenceName": "LS_SMG_DBW",
+											"type": "LinkedServiceReference"
+										}
+									},
+									{
+										"name": "Archive Raw JSON in Processed Bronze folder",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Curate Prism Json",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "JsonSource",
+												"storeSettings": {
+													"type": "AzureBlobFSReadSettings",
+													"recursive": true,
+													"wildcardFolderPath": {
+														"value": "@concat('bronze/PRISM/',item().RowKey)",
+														"type": "Expression"
+													},
+													"wildcardFileName": {
+														"value": "*.json",
+														"type": "Expression"
+													},
+													"enablePartitionDiscovery": false
+												},
+												"formatSettings": {
+													"type": "JsonReadSettings"
+												}
+											},
+											"sink": {
+												"type": "JsonSink",
+												"storeSettings": {
+													"type": "AzureBlobFSWriteSettings"
+												},
+												"formatSettings": {
+													"type": "JsonWriteSettings"
+												}
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "DS_Archive_JSON",
+												"type": "DatasetReference",
+												"parameters": {
+													"pContainer": {
+														"value": "landing",
+														"type": "Expression"
+													},
+													"pDirectory": {
+														"value": "@concat('bronze/PRISM/',item().RowKey)",
+														"type": "Expression"
+													}
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "DS_Archive_JSON",
+												"type": "DatasetReference",
+												"parameters": {
+													"pContainer": {
+														"value": "processed",
+														"type": "Expression"
+													},
+													"pDirectory": {
+														"value": "@concat('bronze/PRISM/',item().RowKey)",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									},
+									{
+										"name": "Raw JSON Deletion",
+										"description": "Deleting RAW JSON Data from landing",
+										"type": "Delete",
+										"dependsOn": [
+											{
+												"activity": "Archive Raw JSON in Processed Bronze folder",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"dataset": {
+												"referenceName": "DS_Archive_JSON",
+												"type": "DatasetReference",
+												"parameters": {
+													"pContainer": {
+														"value": "landing",
+														"type": "Expression"
+													},
+													"pDirectory": {
+														"value": "@concat('bronze/PRISM/',item().RowKey)\n",
+														"type": "Expression"
+													}
+												}
+											},
+											"enableLogging": false,
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											}
+										}
+									},
+									{
+										"name": "Update Watermark_End",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Raw JSON Deletion",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureTableSource",
+												"additionalColumns": [
+													{
+														"name": "vnext_Watermark_End",
+														"value": {
+															"value": "@variables('vnext_Watermark_End')",
+															"type": "Expression"
+														}
+													}
+												],
+												"azureTableSourceQuery": {
+													"value": "PartitionKey eq '@{item().PartitionKey}' and RowKey eq '@{item().RowKey}'",
+													"type": "Expression"
+												},
+												"azureTableSourceIgnoreTableNotFound": false
+											},
+											"sink": {
+												"type": "AzureTableSink",
+												"azureTableInsertType": "merge",
+												"azureTablePartitionKeyName": {
+													"value": "PartitionKey",
+													"type": "Expression"
+												},
+												"azureTableRowKeyName": {
+													"value": "RowKey",
+													"type": "Expression"
+												},
+												"writeBatchSize": 10000
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"mappings": [
+													{
+														"source": {
+															"name": "PartitionKey",
+															"type": "String"
+														},
+														"sink": {
+															"name": "PartitionKey",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "RowKey",
+															"type": "String"
+														},
+														"sink": {
+															"name": "RowKey",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "vnext_Watermark_End",
+															"type": "String"
+														},
+														"sink": {
+															"name": "Watermark_End",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "QueryParameter",
+															"type": "String"
+														},
+														"sink": {
+															"name": "QueryParameter",
+															"type": "String"
+														}
+													}
+												],
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "DS_cfgBronze_ATS",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "DS_cfgBronze_ATS",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"TargetType": {
+				"type": "String"
+			},
+			"FromDate": {
+				"type": "String"
+			},
+			"page": {
+				"type": "String"
+			},
+			"vTotalNoOfPages": {
+				"type": "String"
+			},
+			"vnext_Watermark_End": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "PRISM"
+		},
+		"annotations": []
+	}
+}

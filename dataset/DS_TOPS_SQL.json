@@ -1,0 +1,49 @@
+{
+	"name": "DS_TOPS_SQL",
+	"properties": {
+		"description": "Dataset to connect to SQL server",
+		"linkedServiceName": {
+			"referenceName": "LS_SQLServer",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"SQLUsername": {
+					"value": "@dataset().pUsername",
+					"type": "Expression"
+				},
+				"SQLServer": {
+					"value": "@dataset().Server",
+					"type": "Expression"
+				},
+				"SQLDatabase": {
+					"value": "@dataset().Database",
+					"type": "Expression"
+				},
+				"SQLPassword": {
+					"value": "@dataset().pSecretname",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"Server": {
+				"type": "string",
+				"defaultValue": "van-ss-sql15ag.seaspan.com"
+			},
+			"Database": {
+				"type": "string",
+				"defaultValue": "TOPSSEASPAN_PROD"
+			},
+			"pUsername": {
+				"type": "string",
+				"defaultValue": "PowerBIReader_SMCBITeam"
+			},
+			"pSecretname": {
+				"type": "string",
+				"defaultValue": "TOPS-Password"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}

@@ -1,0 +1,22 @@
+{
+	"name": "LS_ATS_SMG",
+	"properties": {
+		"annotations": [],
+		"type": "AzureTableStorage",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_KV_SMG",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "ADLSSMG-ACCESSKEY"
+			}
+		},
+		"connectVia": {
+			"referenceName": "IR-VNet",
+			"type": "IntegrationRuntimeReference"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

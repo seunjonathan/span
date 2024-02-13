@@ -1,0 +1,34 @@
+{
+	"name": "DS_MISSES_Bronze_JSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_SMG",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pFileName": {
+				"type": "string"
+			},
+			"pDirectory": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().pFileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@concat('bronze/PRISM/',dataset().pDirectory)",
+					"type": "Expression"
+				},
+				"fileSystem": "landing"
+			}
+		},
+		"schema": {}
+	}
+}

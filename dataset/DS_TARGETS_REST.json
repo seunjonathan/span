@@ -1,0 +1,26 @@
+{
+	"name": "DS_TARGETS_REST",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_RESTPRISM",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pDataset": {
+				"type": "string"
+			},
+			"pDateToPullFrom": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@concat('?type=',dataset().pDataset,'&from_date=',dataset().pDateToPullFrom)",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	}
+}

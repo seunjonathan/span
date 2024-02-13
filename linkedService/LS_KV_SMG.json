@@ -1,0 +1,10 @@
+{
+	"name": "LS_KV_SMG",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://kv-smg-dev.vault.azure.net/"
+		}
+	}
+}

@@ -1,0 +1,29 @@
+{
+	"name": "DS_STATISTICS_REST",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_REST_PRISMSTATISTICS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pDataset": {
+				"type": "string"
+			},
+			"pDateToPullFrom": {
+				"type": "string"
+			},
+			"pDateTo": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@concat('/api/twin_engines/',dataset().pDataset,'?from=',formatDateTime(dataset().pDateToPullFrom,'yyyy-MM-dd'),'&to=',formatDateTime(dataset().pDateTo,'yyyy-MM-dd'))",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	}
+}

@@ -1,0 +1,29 @@
+{
+	"name": "DS_VOYAGES_Raw_JSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_HTTP_PRISMVOYAGES",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pDataset": {
+				"type": "string"
+			},
+			"pDateToPullFrom": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@concat('api/',dataset().pDataset,'?started_at=',dataset().pDateToPullFrom)",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {}
+	}
+}

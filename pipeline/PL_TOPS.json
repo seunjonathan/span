@@ -1,0 +1,51 @@
+{
+	"name": "PL_TOPS",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline PL_TOPS_Bronze2Silver",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_TOPS_Bronze2Silver",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute Pipeline - Batch Nearrealtime",
+				"description": "This activity triggers the execution of the pipeline that generates the three Nearrealtime tables based on specified SQL queries.",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline PL_TOPS_Bronze2Silver",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_TOPS_Silver2Gold",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "TOPSv2"
+		},
+		"annotations": []
+	}
+}

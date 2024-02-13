@@ -1,0 +1,17 @@
+{
+	"name": "LS_RESTPRISM",
+	"properties": {
+		"description": "Prism Rest Endpoint",
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://prism.beaverlabs.net/api/performance/targets",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		},
+		"connectVia": {
+			"referenceName": "IR-VNet",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

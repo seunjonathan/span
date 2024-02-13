@@ -1,0 +1,12 @@
+{
+	"name": "LS_ADLS_SMG",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Creating connection between ADF (adfv2-tops-dev) and ADLS (adlssmgdev)",
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://adlssmgdev.dfs.core.windows.net/"
+		}
+	}
+}

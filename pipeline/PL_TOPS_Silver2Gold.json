@@ -1,0 +1,164 @@
+{
+	"name": "PL_TOPS_Silver2Gold",
+	"properties": {
+		"description": "This pipeline procures processed delta data of the TOPS pipeline and curates it based on SQL queries into the gold layer in Delta format.",
+		"activities": [
+			{
+				"name": "Curate Delta Nearrealtime BOL",
+				"description": "This pyspark script will copy incoming delta table from Silver to Gold layer based on an SQL query",
+				"type": "DatabricksSparkPython",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pythonFile": "dbfs:/FileStore/pyspark-scripts/curate_sql2delta.py",
+					"parameters": [
+						"-tTOPSv2/T_BOL",
+						"-ssilver",
+						"-dgold",
+						"@concat('-l',pipeline().parameters.T_BOL_TABLES)",
+						"@concat('-f',pipeline().parameters.T_BOL_SQL)",
+						"-kBOL_Number"
+					]
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_SMG_DBW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Curate Delta Nearrealtime Sailing",
+				"description": "This pyspark script will copy incoming delta table from Silver to Gold layer based on an SQL query",
+				"type": "DatabricksSparkPython",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pythonFile": "dbfs:/FileStore/pyspark-scripts/curate_sql2delta.py",
+					"parameters": [
+						"-tTOPSv2/T_SAILING",
+						"-ssilver",
+						"-dgold",
+						"@concat('-l',pipeline().parameters.T_SAILING_TABLES)",
+						"@concat('-f',pipeline().parameters.T_SAILING_SQL)",
+						"-kSailing_ID"
+					]
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_SMG_DBW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "MISSED_TRAILER_METRICS",
+				"description": "This pyspark script will copy incoming delta table from Silver to Gold layer based on an SQL query",
+				"type": "DatabricksSparkPython",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pythonFile": "dbfs:/FileStore/pyspark-scripts/curate_sql2delta.py",
+					"parameters": [
+						"-tTOPSv2/MISSED_TRAILER_METRICS",
+						"-ssilver",
+						"-dgold",
+						"@concat('-l',pipeline().parameters.TRAILER_METRICS_TABLES)",
+						"@concat('-f',pipeline().parameters.TRAILER_METRICS_SQL)",
+						"-kBOL_Number"
+					]
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_SMG_DBW",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "TURNAROUND_METRICS",
+				"description": "This pyspark script will copy incoming delta table from Silver to Gold layer based on an SQL query",
+				"type": "DatabricksSparkPython",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pythonFile": "dbfs:/FileStore/pyspark-scripts/curate_sql2delta.py",
+					"parameters": [
+						"-tTOPSv2/TURNAROUND_METRICS",
+						"-ssilver",
+						"-dgold",
+						"@concat('-l',pipeline().parameters.TURNAROUND_METRICS_TABLES)",
+						"@concat('-f',pipeline().parameters.TURNAROUND_METRICS_SQL)",
+						"-kSailing_ID"
+					]
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_SMG_DBW",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"T_BOL_SQL": {
+				"type": "string",
+				"defaultValue": "select * from ( SELECT          *,         ROW_NUMBER () OVER (PARTITION BY BOL_Number ORDER BY Added_dt desc) as rw_number     FROM   (WITH CTE_JobPK AS (  SELECT pk_Job_IN AS JobPK   FROM t_Job   WHERE Added_dt >  add_months(current_date(), -1)   UNION   SELECT fk_Job_in   FROM t_JobFieldUpdated   WHERE DateTime_dt > add_months(current_date(), -1) )  SELECT   job.BOL_Number,   assignment.Sailing_ID,   job.fk_ContainerType_in AS Container_Type,   trunk.fk_AssignmentStatus_in AS Assignment_Status,   jobsummary.Hazardous_bt AS Hazardous_Goods,   job.Length,   job.Front_Overhang,   job.Rear_Overhang,    to_timestamp(concat(date(otgpod.Sign_In_Date),'T', date_format(otgpod.Sign_In_Time,'HH:mm:ss'))) AS Signature_DateTime,       CASE   WHEN trunk.fk_AssignmentStatus_in = 2 AND   to_timestamp(concat(date(waypoint.Picked_Up_Date_Time),'T', date_format(waypoint.DepartureTime_dt,'HH:mm:ss'))) IS NULL THEN trunk.LastDoneStatus_dt    WHEN trunk.fk_AssignmentStatus_in = 2 AND    to_timestamp(concat(date(waypoint.Picked_Up_Date_Time),'T', date_format(waypoint.DepartureTime_dt,'HH:mm:ss'))) IS NOT NULL THEN    to_timestamp(concat(date(waypoint.Picked_Up_Date_Time),'T', date_format(waypoint.DepartureTime_dt,'HH:mm:ss')))   ELSE NULL   END AS Actual_Picked_Up_DateTime   ,   job.fk_Route_in AS Route,   job.fk_JobCategory_in AS Category,   job.Added_dt,   CASE     WHEN to_timestamp(concat(date(appointment.Actual_Arrival_Date),'T', date_format(appointment.Actual_Arrival_Time,'HH:mm:ss'))) > job.Preferred_Pickup_Date_Time THEN       to_timestamp(unix_timestamp(to_timestamp(concat(date(appointment.Actual_Arrival_Date),'T', date_format(appointment.Actual_Arrival_Time,'HH:mm:ss')))) + 43200)     ELSE job.Preferred_Pickup_Date_Time   END AS Preferred_Pickup_Date_Time_official,   job.Preferred_Pickup_Date_Time,   t_Consignment.Deleted_dt AS Deleted_Date,      job.CustomFlag2_bt AS DG_Authorized,   trunk.LastDoneStatus_dt AS Status,   job.pk_Job_in,   t_Consignment.fk_Customer_in,   job.fk_MovementMode_in,   job.Unit_Number,    CASE WHEN subassreslog.UsedReservationTEU_dc = 1 THEN 1 ELSE 0 END AS Reservation_used_TEU FROM   t_Job job   LEFT JOIN t_Trunk trunk ON job.pk_Job_in = trunk.fk_Job_in   LEFT JOIN t_assignment assignment ON trunk.fk_Assignment_in = assignment.Sailing_ID   LEFT JOIN t_JobSummary jobsummary ON jobsummary.fk_Job_in = job.pk_Job_in   LEFT JOIN t_OTG_POD otgpod ON otgpod.fk_Trunk_in = trunk.pk_Trunk_in   LEFT JOIN t_Waypoint waypoint ON waypoint.fk_Trunk_in = trunk.pk_Trunk_in AND waypoint.Order_si = 2   LEFT JOIN t_Consignment ON job.fk_Consignment_in = t_Consignment.pk_Consignment_in   LEFT JOIN t_Appointment appointment ON assignment.fk_Appointment_in = appointment.pk_Appointment_in      LEFT JOIN (select *  from              (SELECT *, ROW_NUMBER() OVER (PARTITION BY fk_Assignment_in, fk_Trunk_in ORDER BY added_dt DESC) AS row_num             FROM t_AssignmentReservationLog) where row_num = 1) subassreslog             ON subassreslog.fk_Trunk_in = trunk.pk_Trunk_in AND subassreslog.fk_Assignment_in = assignment.Sailing_ID  WHERE   job.pk_Job_in IN (SELECT JobPK FROM CTE_JobPK) AND   job.Added_dt >= '2019-11-29 15:14:19.737' ) ) where rw_number = 1"
+			},
+			"T_BOL_TABLES": {
+				"type": "string",
+				"defaultValue": "TOPSv2/T_JOB,TOPSv2/T_JOBFIELDUPDATED,TOPSv2/T_TRUNK,TOPSv2/T_ASSIGNMENT,TOPSv2/T_JOBSUMMARY,TOPSv2/T_OTG_POD,TOPSv2/T_WAYPOINT,TOPSv2/T_CONSIGNMENT,TOPSv2/T_APPOINTMENT,TOPSv2/T_ASSIGNMENTRESERVATIONLOG"
+			},
+			"T_SAILING_SQL": {
+				"type": "string",
+				"defaultValue": "SELECT Distinct  assignment.Sailing_ID ,to_timestamp(concat(date(appointment.Scheduled_Departure_Date),'T', date_format(appointment.Scheduled_Departure_Time,'HH:mm:ss'))) AS Scheduled_Depature_Date_time  ,assignment.Actual_Departure_Date_Time  , floor(   (   unix_timestamp(assignment.Actual_Departure_Date_Time) -     unix_timestamp(to_timestamp(concat(date(appointment.Scheduled_Departure_Date),'T', date_format(appointment.Scheduled_Departure_Time,'HH:mm:ss')))) )/60  ) AS Depature_Variance  , to_timestamp(concat(date(appointment.Scheduled_Arrival_Date),'T', date_format(appointment.Scheduled_Arrival_Time,'HH:mm:ss'))) AS Scheduled_Arrival_Date_time  , to_timestamp(concat(date(appointment.Actual_Arrival_Date),'T', date_format(appointment.Actual_Arrival_Time,'HH:mm:ss'))) AS Actual_Arrival_DateTime  ,floor(   (   unix_timestamp(to_timestamp(concat(date(appointment.Actual_Arrival_Date),'T', date_format(appointment.Actual_Arrival_Time,'HH:mm:ss')))     ) -    unix_timestamp(to_timestamp(concat(date(appointment.Scheduled_Arrival_Date),'T', date_format(appointment.Scheduled_Arrival_Time,'HH:mm:ss'))) ) )/60 ) AS Arrival_Variance, assignment.Added_dt AS Add_Date, assignment.Deleted_dt AS Deleted_Date , TRY_CAST(assignment.HaulierInformed_bt AS VARCHAR(10)) AS Lock_Sailing, assignment.fk_Truck_in  ,assignment.fk_route_in FROM t_Assignment assignment INNER JOIN t_Appointment appointment ON appointment.pk_Appointment_in = assignment.fk_Appointment_in INNER JOIN t_Assignment_MasterLog assignmentmasterlog ON assignment.Sailing_ID = assignmentmasterlog.fk_Assignment_in INNER JOIN t_MasterLog masterlog ON assignmentmasterlog.fk_MasterLog_in = masterlog.pk_MasterLog_in and masterlog.date_dt > add_months(current_date(), -1) WHERE (masterlog.Date_dt > add_months(current_date(), -1) OR assignment.Added_dt > add_months(current_date(), -1))"
+			},
+			"T_SAILING_TABLES": {
+				"type": "string",
+				"defaultValue": "TOPSv2/T_ASSIGNMENT,TOPSv2/T_APPOINTMENT,TOPSv2/T_ASSIGNMENT_MASTERLOG,TOPSv2/T_MASTERLOG"
+			},
+			"TRAILER_METRICS_SQL": {
+				"type": "string",
+				"defaultValue": "select BOL_Number, pk_Job_in, Unit_Number, Sailing_ID, other_Sailing_ID, Signature_Date_Time, Actual_Departure_Date_Time, other_Actual_Departure_Date_Time, Route, minutes_between_signin_and_departure, minutes_between_signin_and_other_departure, sailing_num from ( SELECT          *,         ROW_NUMBER () OVER (PARTITION BY BOL_Number ORDER BY Signature_Date_Time desc) as rw_number     FROM   (  WITH T_OTG_POD_EXT AS (     SELECT         *,         TO_TIMESTAMP(CONCAT(LEFT(CAST(Sign_In_Date AS String), 10), ' ', RIGHT(CAST(Sign_In_Time AS String), 8)), 'yyyy-MM-dd HH:mm:ss') AS Signature_Date_Time     FROM T_OTG_POD ), T_JOB_EXT AS (     SELECT         j.*,         t.fk_Assignment_in     FROM T_JOB j     LEFT JOIN T_TRUNK t on t.fk_Job_in = j.pk_Job_in  ) SELECT * FROM (     SELECT          job.BOL_Number,         job.pk_Job_in,         job.Unit_Number,         asgmt1.Sailing_ID,         asgmt2.Sailing_ID as other_Sailing_ID,         pod.Signature_Date_Time,         asgmt1.Actual_Departure_Date_Time,         asgmt2.Actual_Departure_Date_Time as other_Actual_Departure_Date_Time,         rt.Route,         DATEDIFF(SECOND, pod.Signature_Date_Time, asgmt1.Actual_Departure_Date_Time) / 60 as minutes_between_signin_and_departure,         DATEDIFF(SECOND, pod.Signature_Date_Time, asgmt2.Actual_Departure_Date_Time) / 60 as minutes_between_signin_and_other_departure,         ROW_NUMBER() OVER (PARTITION BY job.pk_Job_in ORDER BY asgmt2.Actual_Departure_Date_Time) as sailing_num      FROM T_JOB_EXT job         INNER JOIN T_CONSIGNMENT con on fk_Consignment_in = con.pk_Consignment_in         INNER JOIN T_TRUNK trk on job.pk_Job_in = trk.fk_Job_in         INNER JOIN T_OTG_POD_EXT pod on trk.pk_Trunk_in = pod.fk_Trunk_in         INNER JOIN T_ASSIGNMENT asgmt1 on job.fk_Assignment_in = asgmt1.Sailing_ID         INNER JOIN T_ASSIGNMENT asgmt2 on (job.fk_Route_in = asgmt2.fk_Route_in)                             and (pod.Signature_Date_Time < asgmt2.Actual_Departure_Date_Time)                             and (DATEDIFF(SECOND, pod.Signature_Date_Time, asgmt2.Actual_Departure_Date_Time) / 60.0 >= 30)                             and (DATEDIFF(DAY, pod.Signature_Date_Time, asgmt2.Actual_Departure_Date_Time) < 70)         INNER JOIN T_TRANSPORTPLAN_TRAILER tpt on asgmt1.fk_TransportPlan_in = tpt.fk_TransportPlan_in         INNER JOIN T_TRAILERTYPE tt on tpt.fk_TrailerType_in = tt.pk_TrailerType_in         INNER JOIN T_TRANSPORTPLAN_TRAILER tpt2 on asgmt2.fk_TransportPlan_in = tpt2.fk_TransportPlan_in         INNER JOIN T_TRAILERTYPE tt2 on tpt2.fk_TrailerType_in = tt2.pk_TrailerType_in         INNER JOIN T_ROUTE rt on asgmt1.fk_Route_in = rt.pk_Route_in     WHERE con.Deleted_Dt is NULL     AND asgmt1.Deleted_dt IS NULL     AND asgmt2.Deleted_dt IS NULL      AND asgmt1.Actual_Departure_Date_Time IS NOT NULL ) t WHERE minutes_between_signin_and_other_departure <= minutes_between_signin_and_departure UNION SELECT * FROM (     SELECT          job.BOL_Number,         job.pk_Job_in,         job.Unit_Number,         asgmt1.Sailing_ID,         asgmt2.Sailing_ID as other_Sailing_ID,         pod.Signature_Date_Time,         asgmt1.Actual_Departure_Date_Time,         asgmt2.Actual_Departure_Date_Time as other_Actual_Departure_Date_Time,         rt.Route,         null  as minutes_between_signin_and_departure,         DATEDIFF(SECOND, pod.Signature_Date_Time, asgmt2.Actual_Departure_Date_Time) / 60 as minutes_between_signin_and_other_departure,         ROW_NUMBER() OVER (PARTITION BY job.pk_Job_in ORDER BY asgmt2.Actual_Departure_Date_Time) as sailing_num      FROM T_JOB_EXT job         INNER JOIN T_CONSIGNMENT con on fk_Consignment_in = con.pk_Consignment_in         INNER JOIN T_TRUNK trk on job.pk_Job_in = trk.fk_Job_in         INNER JOIN T_OTG_POD_EXT pod on trk.pk_Trunk_in = pod.fk_Trunk_in         LEFT JOIN T_ASSIGNMENT asgmt1 on job.fk_Assignment_in = asgmt1.Sailing_ID         INNER JOIN T_ASSIGNMENT asgmt2 on (job.fk_Route_in = asgmt2.fk_Route_in)                             and pod.Signature_Date_Time < asgmt2.Actual_Departure_Date_Time                              and (DATEDIFF(SECOND, pod.Signature_Date_Time, asgmt2.Actual_Departure_Date_Time) / 60.0 >= 30)                             and (DATEDIFF(DAY, pod.Signature_Date_Time, asgmt2.Actual_Departure_Date_Time) < 70)         INNER JOIN T_ROUTE rt on asgmt2.fk_Route_in = rt.pk_Route_in     WHERE con.Deleted_Dt is NULL     AND asgmt2.Deleted_dt IS NULL     AND asgmt1.Actual_Departure_Date_Time IS NULL ) p )) where rw_number = 1"
+			},
+			"TRAILER_METRICS_TABLES": {
+				"type": "string",
+				"defaultValue": "TOPSv2/T_OTG_POD,TOPSv2/T_JOB,TOPSv2/T_TRUNK,TOPSv2/T_ASSIGNMENT,TOPSv2/T_CONSIGNMENT,TOPSv2/T_TRANSPORTPLAN_TRAILER,TOPSv2/T_TRAILERTYPE,TOPSv2/T_ROUTE"
+			},
+			"TURNAROUND_METRICS_SQL": {
+				"type": "string",
+				"defaultValue": "WITH T_JOB_EXT AS (     SELECT         j.*,         t.fk_Assignment_in     FROM T_JOB j     LEFT JOIN T_TRUNK t on t.fk_Job_in = j.pk_Job_in  ), T_Appointment_EXT AS (     SELECT         *,         TO_TIMESTAMP(CONCAT(LEFT(CAST(Scheduled_Arrival_Date AS String), 10), ' ', RIGHT(CAST(Scheduled_Arrival_Time AS String), 8)), 'yyyy-MM-dd HH:mm:ss') AS Scheduled_Arrival_Date_Time,         TO_TIMESTAMP(CONCAT(LEFT(CAST(Actual_Arrival_Date AS String), 10), ' ', RIGHT(CAST(Actual_Arrival_Time AS String), 8)), 'yyyy-MM-dd HH:mm:ss') AS Actual_Arrival_Date_Time,         TO_TIMESTAMP(CONCAT(LEFT(CAST(Scheduled_Departure_Date AS String), 10), ' ', RIGHT(CAST(Scheduled_Departure_Time AS String), 8)), 'yyyy-MM-dd HH:mm:ss') AS Scheduled_Departure_Date_Time     FROM T_Appointment ) SELECT     m.Sailing_ID, \tm.Actual_Departure_Date_Time, \tm.Actual_Arrival_Date_Time,     m.Scheduled_Departure_Date_Time,     m.Scheduled_Arrival_Date_Time,     m.Origin_Port,     m.Destination_Port, \tm.Vessel, \tm.Route, \tm.footage_consumed, \tm.num_units,     LAG(m.footage_consumed, 1) OVER (PARTITION BY m.Vessel ORDER BY m.Vessel, m.Actual_Departure_Date_Time) as previous_Sailing_footage_consumed,     LAG(m.num_units, 1) OVER (PARTITION BY m.Vessel ORDER BY m.Vessel, m.Actual_Departure_Date_Time) as previous_Sailing_num_units,     LAG(m.Actual_Arrival_Date_Time, 1) OVER (PARTITION BY m.Vessel ORDER BY m.Vessel, m.Actual_Departure_Date_Time) as previous_Sailing_Actual_Arrival_Date_Time,     LAG(m.Scheduled_Arrival_Date_Time, 1) OVER (PARTITION BY m.Vessel ORDER BY m.Vessel, m.Actual_Departure_Date_Time) as previous_Sailing_Scheduled_Arrival_Date_Time,     LAG(m.Destination_Port, 1) OVER (PARTITION BY m.Vessel ORDER BY m.Vessel, m.Actual_Departure_Date_Time) as previous_Sailing_Destination_Port,     LAG(m.Sailing_ID, 1) OVER (PARTITION BY m.Vessel ORDER BY m.Vessel, m.Actual_Departure_Date_Time) as previous_Sailing_ID,     ROW_NUMBER() OVER (PARTITION BY m.Vessel ORDER BY m.Vessel, m.Actual_Departure_Date_Time) as trip_num FROM ( \tSELECT         asgmt.Sailing_ID,         asgmt.Actual_Departure_Date_Time,         asgmt.Deleted_dt,         appt.Actual_Arrival_Date_Time,         appt.Scheduled_Arrival_Date_Time,         appt.Scheduled_Departure_Date_Time,         tt2.Vessel_Name AS Vessel,         rt.Route,         rt.Origin_Terminal as Origin_Port,         rt.Destination_Terminal as Destination_Port,         SUM(coalesce(job.length, 0) + coalesce(job.front_overhang, 0) + coalesce(job.rear_overhang, 0)) as footage_consumed,         COUNT(job.BOL_Number) as num_units \tFROM T_JOB_EXT job         INNER JOIN T_CONSIGNMENT con on fk_Consignment_in = con.pk_Consignment_in         INNER JOIN T_ASSIGNMENT asgmt on job.fk_Assignment_in = asgmt.Sailing_ID         INNER JOIN T_Appointment_EXT appt on appt.pk_Appointment_in = asgmt.fk_Appointment_in         INNER JOIN T_Truck tt2 on tt2.pk_Truck_in = asgmt.fk_Truck_in         INNER JOIN T_ROUTE rt on asgmt.fk_Route_in = rt.pk_Route_in \tWHERE asgmt.Deleted_dt IS NULL AND con.Deleted_Dt is NULL \tGROUP BY         asgmt.Sailing_ID,         asgmt.Actual_Departure_Date_Time,         asgmt.Deleted_dt,         appt.Actual_Arrival_Date_Time,         appt.Scheduled_Arrival_Date_Time,         appt.Scheduled_Departure_Date_Time,         tt2.Vessel_Name,         rt.Route,         rt.Origin_Terminal,         rt.Destination_Terminal ) m"
+			},
+			"TURNAROUND_METRICS_TABLES": {
+				"type": "string",
+				"defaultValue": "TOPSv2/T_JOB,TOPSv2/T_TRUNK,TOPSv2/T_APPOINTMENT,TOPSv2/T_CONSIGNMENT,TOPSv2/T_ASSIGNMENT,TOPSv2/T_TRUCK,TOPSv2/T_ROUTE"
+			}
+		},
+		"folder": {
+			"name": "TOPSv2"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-08T19:40:43Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

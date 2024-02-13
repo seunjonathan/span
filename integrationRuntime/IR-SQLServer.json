@@ -1,0 +1,12 @@
+{
+	"name": "IR-SQLServer",
+	"properties": {
+		"type": "SelfHosted",
+		"typeProperties": {
+			"linkedInfo": {
+				"resourceId": "/subscriptions/e2764bf7-bdda-4887-aa05-42f41431e1c1/resourcegroups/rg-timextender-prod-canadacentral-001/providers/Microsoft.DataFactory/factories/teodxdf/integrationruntimes/teidradf",
+				"authorizationType": "Rbac"
+			}
+		}
+	}
+}

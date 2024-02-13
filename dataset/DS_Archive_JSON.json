@@ -1,0 +1,33 @@
+{
+	"name": "DS_Archive_JSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_SMG",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pContainer": {
+				"type": "string"
+			},
+			"pDirectory": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().pDirectory",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().pContainer",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {}
+	}
+}
