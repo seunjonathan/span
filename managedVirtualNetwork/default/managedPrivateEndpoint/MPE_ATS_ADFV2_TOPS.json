@@ -1,7 +1,0 @@
-{
-	"name": "MPE_ATS_ADFV2_TOPS",
-	"properties": {
-		"privateLinkResourceId": "/subscriptions/e2764bf7-bdda-4887-aa05-42f41431e1c1/resourceGroups/rg-smg-common-dev/providers/Microsoft.Storage/storageAccounts/adlssmgdev",
-		"groupId": "table"
-	}
-}
