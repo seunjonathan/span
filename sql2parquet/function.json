@@ -1,0 +1,11 @@
+{
+    "scriptFile": "bol.py",
+    "bindings": [
+      {
+        "name": "topstimer",
+        "type": "timerTrigger",
+        "direction": "in",
+        "schedule": "0 */5 * * * *"
+      }
+    ]
+}
