@@ -1,0 +1,84 @@
+fk_Job_in,Load_vc,fk_LoadTariffPoint_in,ColDel_vc,fk_ColDelTariffPoint_in,Unload_vc,fk_UnloadTariffPoint_in,fk_Port_in,PortCode_ch,fk_PortJobWaypoint_in,WayCount_in,Time_dt,Date_dt,CargoDescription_vc,PackageTypeCode_ch,PackageSealNumbers_vc,PackageTypeName_vc,NumberOfPackages_in,GrossWeight_dc,NetWeight_dc,Volume_dc,MaxTemp_dc,MinTemp_dc,Hazardous_bt,TrunkCount_in,DepotCode_ch,RatedRevenueTotal_dc,RatedRevenueDetails_vc,LoadActualDate_dt,UnloadActualDate_dt,ColDelActualTime_dt,ColDelDepartTime_dt,fk_PrimaryTrunk_in,fk_ContainerDepot_in,CargoTransferred_dt
+2347931,TILBURY,4634,null,null,SWARTZ BAY,4637,149,SWA   ,4538911,0,null,2023-11-13T00:00:00.000+0000,Consumer- Commercial,null,,null,null,1.000,1.000,null,null,null,false,1,SWA   ,null,null,2023-11-13T00:00:00.000+0000,2023-11-13T00:00:00.000+0000,null,null,2345051,218,null
+2347925,TILBURY,4634,null,null,DUKE POINT,4638,154,DUK   ,4538899,0,null,2023-11-13T00:00:00.000+0000,Consumer- Commercial,null,,null,null,1.000,1.000,null,null,null,false,1,DUK   ,null,null,2023-11-06T00:00:00.000+0000,2023-11-06T00:00:00.000+0000,null,null,2345045,220,null
+2347924,TILBURY,4634,null,null,DUKE POINT,4638,154,DUK   ,4538897,0,null,2023-11-13T00:00:00.000+0000,Consumer- Commercial,null,,null,null,1.000,1.000,null,null,null,false,1,DUK   ,298.040000000000,"Begin Auto Rating for Job 6188098
+Auto Rate found: T4 NANDUK(<30)
+Tariff found: T4 NANDUK
+Effective: 6/1/2023
+Basic Charge charge of 219.52 CAD applied
+Tariff Point Rate found: THC30-
+Terminal Charge charge of 39.88 CAD applied
+Surcharge Rate found: Fuel Surcharge
+Fuel Surcharge charge of 38.64 CAD applied
+",2023-11-13T00:00:00.000+0000,2023-11-13T00:00:00.000+0000,null,null,2345044,220,null
+2347920,TILBURY,4634,null,null,DUKE POINT,4638,154,DUK   ,4538889,0,null,2023-11-13T00:00:00.000+0000,Consumer- Commercial,null,,null,null,1.000,1.000,null,null,null,false,1,DUK   ,344.130000000000,"Begin Auto Rating for Job 6188094
+Auto Rate found: T4 NANDUK(>30)
+Tariff found: T4 NANDUK
+Effective: 6/1/2023
+Basic Charge charge of 258.72 CAD applied
+Tariff Point Rate found: THC31+
+Terminal Charge charge of 39.88 CAD applied
+Surcharge Rate found: Fuel Surcharge
+Fuel Surcharge charge of 45.53 CAD applied
+",2023-11-13T00:00:00.000+0000,2023-11-13T00:00:00.000+0000,null,null,2345040,220,null
+2347930,TILBURY,4634,null,null,SWARTZ BAY,4637,149,SWA   ,4538909,0,null,2023-11-13T00:00:00.000+0000,Consumer- Commercial,null,,null,null,1.000,1.000,null,null,null,false,1,SWA   ,320.100000000000,"Begin Auto Rating for Job 6188104
+Auto Rate found: T4 SWA (<30)
+Tariff found: T4 SWA
+Effective: 6/1/2023
+Basic Charge charge of 238.28 CAD applied
+Tariff Point Rate found: THC30-
+Terminal Charge charge of 39.88 CAD applied
+Surcharge Rate found: Fuel Surcharge
+Fuel Surcharge charge of 41.94 CAD applied
+",2023-11-13T00:00:00.000+0000,2023-11-13T00:00:00.000+0000,null,null,2345050,218,null
+2348119,TILBURY,4634,null,null,SWARTZ BAY,4637,149,SWA   ,4539287,0,null,2023-11-13T00:00:00.000+0000,Consumer- Commercial,null,,null,null,1.000,1.000,null,null,null,true,1,SWA   ,605.290000000000,"Begin Auto Rating for Job 6188293
+Auto Rate found: T4 SWA (>30)
+Tariff found: T4 SWA
+Effective: 6/1/2023
+Basic Charge charge of 451.03 CAD applied
+Dangerous Surcharge charge of 35.00 CAD applied
+Tariff Point Rate found: THC31+
+Terminal Charge charge of 39.88 CAD applied
+Surcharge Rate found: Fuel Surcharge
+Fuel Surcharge charge of 79.38 CAD applied
+",2023-11-13T00:00:00.000+0000,2023-11-13T00:00:00.000+0000,null,null,2345239,218,null
+2348117,TILBURY,4634,null,null,DUKE POINT,4638,154,DUK   ,4539283,0,null,2023-11-13T00:00:00.000+0000,Consumer- Commercial,null,,null,null,1.000,1.000,null,null,null,false,1,DUK   ,371.790000000000,"Begin Auto Rating for Job 6188291
+Auto Rate found: T4 NANDUK(>30)
+Tariff found: T4 NANDUK
+Effective: 6/1/2023
+Basic Charge charge of 282.24 CAD applied
+Tariff Point Rate found: THC31+
+Terminal Charge charge of 39.88 CAD applied
+Surcharge Rate found: Fuel Surcharge
+Fuel Surcharge charge of 49.67 CAD applied
+",2023-11-13T00:00:00.000+0000,2023-11-13T00:00:00.000+0000,null,null,2345237,220,null
+2348220,TILBURY,4634,null,null,DUKE POINT,4638,154,DUK   ,4539489,0,null,2023-11-13T00:00:00.000+0000,Consumer-Merchandise,null,,null,null,1.000,1.000,null,null,null,false,1,DUK   ,285.410000000000,"Begin Auto Rating for Job 6188394
+Auto Rate found: T1 CAT C NANDUK(<32)
+Tariff found: CATC<33 NANDUK
+Effective: 6/1/2023
+Basic Charge charge of 208.78 CAD applied
+Tariff Point Rate found: THC31+
+Terminal Charge charge of 39.88 CAD applied
+Surcharge Rate found: Fuel Surcharge
+Fuel Surcharge charge of 36.75 CAD applied
+",2023-11-13T00:00:00.000+0000,2023-11-13T00:00:00.000+0000,null,null,2345340,220,null
+2346281,TILBURY,4634,null,null,DUKE POINT,4638,154,DUK   ,4535611,0,null,2023-11-13T00:00:00.000+0000,Consumer-Frozen Food,null,,null,null,1.000,1.000,null,-10.00,null,false,1,DUK   ,357.520000000000,"Begin Auto Rating for Job 6186455
+Auto Rate found: T6 NANDUK(>30)
+Tariff found: T6 NANDUK
+Effective: 6/1/2023
+Basic Charge charge of 270.10 CAD applied
+Tariff Point Rate found: THC31+
+Terminal Charge charge of 39.88 CAD applied
+Surcharge Rate found: Fuel Surcharge
+Fuel Surcharge charge of 47.54 CAD applied
+",2023-11-13T00:00:00.000+0000,2023-11-13T00:00:00.000+0000,null,null,2343401,220,null
+2346282,TILBURY,4634,null,null,DUKE POINT,4638,154,DUK   ,4535613,0,null,2023-11-13T00:00:00.000+0000,Consumer-Frozen Food,null,,null,null,1.000,1.000,null,-10.00,null,false,1,DUK   ,288.840000000000,"Begin Auto Rating for Job 6186456
+Auto Rate found: T6 NANDUK(<30)
+Tariff found: T6 NANDUK
+Effective: 6/1/2023
+Basic Charge charge of 211.70 CAD applied
+Tariff Point Rate found: THC30-
+Terminal Charge charge of 39.88 CAD applied
+Surcharge Rate found: Fuel Surcharge
+Fuel Surcharge charge of 37.26 CAD applied
+",2023-11-13T00:00:00.000+0000,2023-11-13T00:00:00.000+0000,null,null,2343402,220,null

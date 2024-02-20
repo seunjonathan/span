@@ -1,0 +1,11 @@
+pk_MasterLog_in,Date_dt,User_vc,fk_ActivityType_in,Details_tx,FileName_vc,RootDirectory_vc,TempForeignColumnField_in
+95746,2014-09-29T15:10:41.107+0000,null,8,Assignment Status changed to Assigned,null,null,null
+95748,2014-09-29T15:14:20.767+0000,CM ,9,Job Added,null,null,null
+95747,2014-09-29T15:14:21.170+0000,CM ,9,Trunk 000000-01 Added,null,null,null
+95750,2014-09-29T15:18:10.337+0000,CM ,9,Job Added,null,null,null
+95749,2014-09-29T15:18:10.347+0000,CM ,9,Trunk 000001-01 Added,null,null,null
+95751,2014-09-29T15:18:30.777+0000,CM ,9,Container Number changed from 01          to 378618     ,null,null,null
+95752,2014-09-29T15:18:30.977+0000,CM ,9,Job Updated,null,null,null
+95753,2014-09-29T15:18:37.357+0000,CM ,9,Job Updated,null,null,null
+95755,2014-09-29T15:23:05.910+0000,CM ,9,Job Added,null,null,null
+95754,2014-09-29T15:23:05.930+0000,CM ,9,Trunk 000002-01 Added,null,null,null

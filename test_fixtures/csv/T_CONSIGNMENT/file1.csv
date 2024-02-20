@@ -1,0 +1,17 @@
+pk_Consignment_in,ConsignmentNumber_vc,fk_HaulageType_in,fk_Branch_in,fk_Customer_in,CustomerReference_vc,Charged_dt,Invoiced_dt,Complete_dt,Comments_vc,UserLock_vc,SessionLock_vc,LastLock_dt,LastUpdate_ts,Deleted_dt,Provisional_bt,InterfaceReference_vc,fk_CombineType_in,Added_dt,ActionDateTime_dt,fk_WorkTemplate_in,Contact_vc,Telephone_vc,Email_vc,DeleteComments_vc,SystemEnforcedCustomerRequirements_dt,fk_LockInterfaceOperation_in,LockContext_vc,ContactOffice_vc,Confirmed_dt,OperationalOffice_vc
+2352331,null,7,3,1494,,2023-11-16T14:06:38.003+0000,2023-11-16T14:34:34.940+0000,null,EMPTY,CG ,null,2023-11-16T14:46:08.613+0000,AAAAAB0tiPQ=,null,false,null,null,2023-11-12T03:41:54.957+0000,null,null,,null,null,null,null,null,null,null,null,null
+2352332,null,7,3,1015,,2023-11-16T14:11:03.350+0000,2023-11-16T14:32:51.820+0000,null,,CG ,null,2023-11-16T14:46:08.613+0000,AAAAAB0tiPU=,null,false,null,null,2023-11-12T04:37:53.160+0000,null,null,,null,null,null,null,null,null,null,null,null
+2352333,null,7,3,1015,,2023-11-16T14:15:00.667+0000,2023-11-16T14:32:51.837+0000,null,,CG ,null,2023-11-16T14:46:08.613+0000,AAAAAB0tiPY=,null,false,null,null,2023-11-12T04:39:20.483+0000,null,null,,null,null,null,null,null,null,null,null,null
+2352334,null,7,3,1610,,2023-11-16T14:04:33.300+0000,2023-11-16T14:33:56.657+0000,null,,CG ,null,2023-11-16T14:46:08.613+0000,AAAAAB0tiPc=,null,false,null,null,2023-11-12T05:09:35.940+0000,null,null,,null,null,null,null,null,null,null,null,null
+2352335,null,7,3,1610,,2023-11-16T14:16:23.157+0000,2023-11-16T14:33:56.717+0000,null,"Picked up by:
+Driver: Gate 2 TIL - Out
+Tractor: 
+",CG ,null,2023-11-16T14:46:08.613+0000,AAAAAB0tiPg=,null,false,null,null,2023-11-12T05:10:23.467+0000,null,null,,null,null,null,null,null,null,null,null,null
+2352336,null,7,3,1610,,2023-11-16T14:08:40.307+0000,2023-11-16T14:33:56.657+0000,null,,CG ,null,2023-11-16T14:46:08.613+0000,AAAAAB0tiPk=,null,false,null,null,2023-11-12T05:10:44.447+0000,null,null,,null,null,null,null,null,null,null,null,null
+2352337,null,7,3,1610,,2023-11-16T14:16:23.750+0000,2023-11-16T14:33:56.717+0000,null,,CG ,null,2023-11-16T14:46:08.613+0000,AAAAAB0tiPo=,null,false,null,null,2023-11-12T05:11:20.560+0000,null,null,,null,null,null,null,null,null,null,null,null
+2352338,null,7,3,1015,,2023-11-16T14:11:03.880+0000,2023-11-16T14:32:51.820+0000,null,,CG ,null,2023-11-16T14:46:08.613+0000,AAAAAB0tiPs=,null,false,null,null,2023-11-12T05:10:26.310+0000,null,null,,null,null,null,null,null,null,null,null,null
+2352339,null,7,3,1610,,2023-11-16T14:06:38.503+0000,2023-11-16T14:33:56.670+0000,null,,CG ,null,2023-11-16T14:46:08.613+0000,AAAAAB0tiPw=,null,false,null,null,2023-11-12T05:11:42.580+0000,null,null,,null,null,null,null,null,null,null,null,null
+2352340,null,7,3,1610,,2023-11-16T14:15:01.540+0000,2023-11-16T14:33:56.703+0000,null,"Picked up by:
+Driver: Gate 2 TIL - Out
+Tractor: 
+",CG ,null,2023-11-16T14:46:08.613+0000,AAAAAB0tiP0=,null,false,null,null,2023-11-12T05:12:19.467+0000,null,null,,null,null,null,null,null,null,null,null,null

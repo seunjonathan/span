@@ -1,0 +1,11 @@
+pk_User_in,Login_ch,Name_vc,Password_vc,fk_Branch_in,LastUpdate_ts,fk_TrafficFilter_in,PurchaseLimit_in,WWWPassword_vc,fk_FleetFilter_in,Email_vc,DirectDial_vc,Fax_vc,LicenceAgreed_vc,Login_vc,PurchaseAuthorise_in,AccountAuthorisedBy_vc,AccountAuthorisedDate_dt,AccountReviewedBy_vc,AccountReviewedDate_dt,AccountLocked_bt,InvalidLoginAttempts_in,ResetPassword_bt,fk_GlobalTrafficConfig_in,UTCOffset_dc,Timezone_vc,CreditAuthorisationLimit_in,CreditApprovalOwnBranchOnly_bt
+208,JS1,Jaspreet Sandhu,Tilbury,3,AAAAABsTL48=,null,0,Tilbury,null,,,,null,jsandhu,0,,null,,null,false,null,false,null,null,null,null,false
+2,int,Interface User,bubble,3,AAAAABdGsVw=,null,10000,bubble,null,,,,nvittles 23/05/2014 14:35:43,int,0,null,null,null,null,false,0,false,null,null,null,null,false
+3,ecs,ECS Administration,ecstops,3,AAAAABdGsV0=,1,10000,ecstops,null,,,,Collin 24/11/2008 10:46:40,ecs,0,null,null,null,null,false,0,false,null,null,null,null,false
+209,CMI,CMI Region,null,3,AAAAABiNNfg=,null,0,,null,,,,null,CMI,0,,null,,null,false,null,false,null,null,null,null,false
+109,BC1,Brian Campbell,11222554,9,AAAAABRMjTA=,null,0,Souris1,null,,,,null,bcampbel,0,,null,,null,false,0,false,null,null,null,null,false
+39,SO2,SRY Traffic Office,welcome,6,AAAAABVKt8g=,null,0,FERSRY22,null,,,,null,sfcsry,0,,null,,null,false,0,false,null,null,null,null,false
+212,ACM,ACM Region,null,3,AAAAABe6zoI=,null,0,,null,,,,null,ACM,0,,null,,null,false,null,false,null,null,null,null,false
+142,GP1,Gord Parmar,sdfffvfdf,3,AAAAAAchi/Q=,null,0,welcome,null,,,,null,GPARMAR,0,,null,,null,false,0,false,null,null,null,null,false
+160,NL1,Nathan Lauer,null,3,AAAAABdGsWo=,null,0,welcome,null,,,,null,nlauer,0,,null,,null,false,null,false,null,null,null,null,false
+197,MP1,Mukal Pasricha,fgbfdhdfhg,3,AAAAABW181A=,null,0,welcome,null,,,,null,mpasricha,0,,null,,null,false,null,false,null,null,null,null,false
