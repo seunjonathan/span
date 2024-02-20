@@ -1,13 +1,18 @@
-# DO NOT include azure-functions-worker in this file
-# The Python Worker is managed by Azure Functions platform
-# Manually managing azure-functions-worker may cause unexpected issues
+# Microsoft dependencies
+azure-core==1.20.1
+azure-storage-blob==12.9.0
+msrestazure==0.6.2
 
-azure-functions == 1.17.0
-azure-storage-blob == 12.6.0
+# Other
+adlfs==0.7.7
+python-dotenv==0.12.0
+Flask==2.1.0
 
-# To access the TOPS SQL Server
-pyodbc == 5.0.1
+# Added to avoid a change that caused an import error on 21 Feb 2022
+#   ref: https://serverfault.com/questions/1094062/error-from-itsdangerous-import-json-as-json-importerror-cannot-import-name-j
+itsdangerous==2.0.1 # 
 
-# To generate parquet files.
-pandas == 1.3.4
-pyarrow == 6.0.1
+delta-lake-reader[azure]==0.2.10
+
+# Need to keep werkzeug below version 3
+Werkzeug==2.0.0
