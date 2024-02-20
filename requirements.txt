@@ -1,8 +1,0 @@
-# Service principal authentication via env variables
-# python-dotenv==0.15.0
-
-# Spark
-#    CAUTION: v3.2.0 exibits problems parsing JSON. Ref: https://issues.apache.org/jira/browse/SPARK-37577
-#    Use Spark/Delta 3.1.2/1.0.0 (same as in Databricks) or 3.2.1/1.1.0 Ref: : https://docs.delta.io/latest/releases.html
-pyspark==3.1.2
-delta-spark==1.0.0
