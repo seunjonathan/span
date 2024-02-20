@@ -1,0 +1,18 @@
+[
+  {
+    "target": {
+      "deleted_at": null,
+      "id": "ba1b1275-526d-4a91-aa2f-e3f1a3db95d0",
+      "inserted_at": "2021-09-07T17:17:40.114532Z",
+      "parameters": {
+        "vessel_ids": [
+          "b9d3340c-bb9e-428c-85d2-9869c934c5a8",
+          "51a69e8f-c5e9-42b3-83d0-28af40353989",
+          "a0216ccf-b6ed-48c4-8d08-2b0f3bf1fa79",
+          "69840bb3-66d7-462d-b896-a6ccc7e4814a"
+        ]
+      },
+      "type": "dual_fuel_engine_gas_mode"
+    }
+  }
+]

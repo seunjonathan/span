@@ -1,0 +1,237 @@
+[
+    {
+        "entries": [
+            {
+                "comments": [],
+                "ended_at": "2023-08-12T14:31:00Z",
+                "id": "2a4cf0a6-4758-4cba-a048-3572c073d96a",
+                "properties": {
+                    "reasons": [
+                        {
+                            "type": "did_not_connect"
+                        }
+                    ]
+                },
+                "started_at": "2023-08-12T13:58:00Z",
+                "statistics": {
+                    "additional_emissions": 0.26287828342383424,
+                    "additional_fuel_consumptions": [
+                        {
+                            "consumer_name": "DG 2",
+                            "fuel_amount": {
+                                "amount": 1.3800000209361314,
+                                "fuel_name": "MDO",
+                                "unit": "l"
+                            },
+                            "source": "flow_meters"
+                        },
+                        {
+                            "consumer_name": "DG 2",
+                            "fuel_amount": {
+                                "amount": 3.9423333644866942,
+                                "fuel_name": "LNG",
+                                "unit": "GJ"
+                            },
+                            "source": "flow_meters"
+                        },
+                        {
+                            "consumer_name": "DG 1",
+                            "fuel_amount": {
+                                "amount": 0.0,
+                                "fuel_name": "MDO",
+                                "unit": "l"
+                            },
+                            "source": "flow_meters"
+                        },
+                        {
+                            "consumer_name": "DG 1",
+                            "fuel_amount": {
+                                "amount": 0.0,
+                                "fuel_name": "LNG",
+                                "unit": "GJ"
+                            },
+                            "source": "flow_meters"
+                        }
+                    ],
+                    "duration_min": 33
+                },
+                "target": {
+                    "id": "6ec596ed-a137-4d08-8f50-82df10a33de5",
+                    "parameters": {
+                        "max_connect_after": 15,
+                        "max_disconnect_before": 15,
+                        "vessel_ids": [
+                            "b9d3340c-bb9e-428c-85d2-9869c934c5a8",
+                            "51a69e8f-c5e9-42b3-83d0-28af40353989",
+                            "a0216ccf-b6ed-48c4-8d08-2b0f3bf1fa79",
+                            "69840bb3-66d7-462d-b896-a6ccc7e4814a"
+                        ]
+                    },
+                    "type": "shore_power_utilization"
+                },
+                "tenant_id": "00e3b62b-ca7a-4fef-a9c8-7a915b758d85",
+                "vessel_id": "a0216ccf-b6ed-48c4-8d08-2b0f3bf1fa79"
+            },
+            {
+                "comments": [],
+                "ended_at": "2023-08-12T02:21:00Z",
+                "id": "369f2bb3-a250-4888-aca9-1bf8ad8774f8",
+                "properties": {
+                    "reasons": [
+                        {
+                            "disconnected_at": "2023-08-12T02:01:00.000Z",
+                            "type": "disconnected_early",
+                            "undocked_at": "2023-08-12T02:18:00.000Z"
+                        },
+                        {
+                            "connected_at": "2023-08-12T01:25:00.000Z",
+                            "docked_at": "2023-08-12T01:00:00.000Z",
+                            "type": "connected_late"
+                        }
+                    ]
+                },
+                "started_at": "2023-08-12T00:56:00Z",
+                "statistics": {
+                    "additional_emissions": 0.5134335796882008,
+                    "additional_fuel_consumptions": [
+                        {
+                            "consumer_name": "DG 2",
+                            "fuel_amount": {
+                                "amount": 72.5679998734345,
+                                "fuel_name": "MDO",
+                                "unit": "l"
+                            },
+                            "source": "flow_meters"
+                        },
+                        {
+                            "consumer_name": "DG 2",
+                            "fuel_amount": {
+                                "amount": 3.82266667286555,
+                                "fuel_name": "LNG",
+                                "unit": "GJ"
+                            },
+                            "source": "flow_meters"
+                        },
+                        {
+                            "consumer_name": "DG 1",
+                            "fuel_amount": {
+                                "amount": 7.908000055948893,
+                                "fuel_name": "MDO",
+                                "unit": "l"
+                            },
+                            "source": "flow_meters"
+                        },
+                        {
+                            "consumer_name": "DG 1",
+                            "fuel_amount": {
+                                "amount": 0.11266666650772095,
+                                "fuel_name": "LNG",
+                                "unit": "GJ"
+                            },
+                            "source": "flow_meters"
+                        }
+                    ],
+                    "duration_min": 85
+                },
+                "target": {
+                    "id": "6ec596ed-a137-4d08-8f50-82df10a33de5",
+                    "parameters": {
+                        "max_connect_after": 15,
+                        "max_disconnect_before": 15,
+                        "vessel_ids": [
+                            "b9d3340c-bb9e-428c-85d2-9869c934c5a8",
+                            "51a69e8f-c5e9-42b3-83d0-28af40353989",
+                            "a0216ccf-b6ed-48c4-8d08-2b0f3bf1fa79",
+                            "69840bb3-66d7-462d-b896-a6ccc7e4814a"
+                        ]
+                    },
+                    "type": "shore_power_utilization"
+                },
+                "tenant_id": "00e3b62b-ca7a-4fef-a9c8-7a915b758d85",
+                "vessel_id": "a0216ccf-b6ed-48c4-8d08-2b0f3bf1fa79"
+            },
+            {
+                "comments": [],
+                "ended_at": "2023-08-11T01:28:00Z",
+                "id": "8955f108-1e77-4f9d-b777-11f6cbdb4444",
+                "properties": {
+                    "reasons": [
+                        {
+                            "disconnected_at": "2023-08-11T00:56:00.000Z",
+                            "type": "disconnected_early",
+                            "undocked_at": "2023-08-11T01:23:00.000Z"
+                        },
+                        {
+                            "connected_at": "2023-08-10T23:06:00.000Z",
+                            "docked_at": "2023-08-10T22:44:00.000Z",
+                            "type": "connected_late"
+                        }
+                    ]
+                },
+                "started_at": "2023-08-10T22:39:00Z",
+                "statistics": {
+                    "additional_emissions": 0.69772064104537912,
+                    "additional_fuel_consumptions": [
+                        {
+                            "consumer_name": "DG 2",
+                            "fuel_amount": {
+                                "amount": 84.972000635601574,
+                                "fuel_name": "MDO",
+                                "unit": "l"
+                            },
+                            "source": "flow_meters"
+                        },
+                        {
+                            "consumer_name": "DG 2",
+                            "fuel_amount": {
+                                "amount": 6.5041666825612383,
+                                "fuel_name": "LNG",
+                                "unit": "GJ"
+                            },
+                            "source": "flow_meters"
+                        },
+                        {
+                            "consumer_name": "DG 1",
+                            "fuel_amount": {
+                                "amount": 0.49800001283486683,
+                                "fuel_name": "MDO",
+                                "unit": "l"
+                            },
+                            "source": "flow_meters"
+                        },
+                        {
+                            "consumer_name": "DG 1",
+                            "fuel_amount": {
+                                "amount": 0.0,
+                                "fuel_name": "LNG",
+                                "unit": "GJ"
+                            },
+                            "source": "flow_meters"
+                        }
+                    ],
+                    "duration_min": 169
+                },
+                "target": {
+                    "id": "6ec596ed-a137-4d08-8f50-82df10a33de5",
+                    "parameters": {
+                        "max_connect_after": 15,
+                        "max_disconnect_before": 15,
+                        "vessel_ids": [
+                            "b9d3340c-bb9e-428c-85d2-9869c934c5a8",
+                            "51a69e8f-c5e9-42b3-83d0-28af40353989",
+                            "a0216ccf-b6ed-48c4-8d08-2b0f3bf1fa79",
+                            "69840bb3-66d7-462d-b896-a6ccc7e4814a"
+                        ]
+                    },
+                    "type": "shore_power_utilization"
+                },
+                "tenant_id": "00e3b62b-ca7a-4fef-a9c8-7a915b758d85",
+                "vessel_id": "69840bb3-66d7-462d-b896-a6ccc7e4814a"
+            }
+        ],
+        "page_number": 1,
+        "page_size": 25,
+        "total_entries": 3,
+        "total_pages": 1
+    }
+]

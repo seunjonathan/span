@@ -1,0 +1,94 @@
+{
+  "entries": [
+    {
+      "comments": [],
+      "ended_at": "2023-07-16T17:51:59Z",
+      "id": "e6c205a0-e81d-450f-86d5-36f86fb934e6",
+      "leg": {
+        "from": {
+          "id": "2e34cf5a-1505-4f61-8aea-50be9423276d",
+          "name": "Fraser River Approach",
+          "type": "waypoint"
+        },
+        "to": {
+          "id": "02749899-a662-4d8c-8043-c862efcd5317",
+          "name": "Tilbury Island Approach",
+          "type": "waypoint"
+        }
+      },
+      "properties": {
+        "engine": "DG 2"
+      },
+      "started_at": "2023-07-16T17:51:44Z",
+      "statistics": {
+        "duration_min": 0
+      },
+      "target": {
+        "id": "ba1b1275-526d-4a91-aa2f-e3f1a3db95d0",
+        "parameters": {
+          "vessel_ids": [
+            "b9d3340c-bb9e-428c-85d2-9869c934c5a8",
+            "51a69e8f-c5e9-42b3-83d0-28af40353989",
+            "a0216ccf-b6ed-48c4-8d08-2b0f3bf1fa79",
+            "69840bb3-66d7-462d-b896-a6ccc7e4814a"
+          ]
+        },
+        "type": "dual_fuel_engine_gas_mode"
+      },
+      "tenant_id": "00e3b62b-ca7a-4fef-a9c8-7a915b758d85",
+      "vessel_id": "69840bb3-66d7-462d-b896-a6ccc7e4814a"
+    },
+    {
+      "comments": [],
+      "ended_at": "2023-07-16T17:50:16Z",
+      "id": "cc52c6b7-0424-415d-a041-93d7d412c15c",
+      "leg": {
+        "from": {
+          "id": "2e34cf5a-1505-4f61-8aea-50be9423276d",
+          "name": "Fraser River Approach",
+          "type": "waypoint"
+        },
+        "to": {
+          "id": "02749899-a662-4d8c-8043-c862efcd5317",
+          "name": "Tilbury Island Approach",
+          "type": "waypoint"
+        }
+      },
+      "properties": {
+        "engine": "DG 2"
+      },
+      "started_at": "2023-07-16T17:49:46Z",
+      "statistics": {
+        "duration_min": 0,
+        "fuel_oil_consumption": {
+          "consumer_name": "all",
+          "fuel_amount": {
+            "amount": 8.977999877929687,
+            "fuel_name": "MDO",
+            "unit": "l"
+          },
+          "source": "flow_meters"
+        },
+        "fuel_oil_emissions": 0.02849203814140503
+      },
+      "target": {
+        "id": "ba1b1275-526d-4a91-aa2f-e3f1a3db95d0",
+        "parameters": {
+          "vessel_ids": [
+            "b9d3340c-bb9e-428c-85d2-9869c934c5a8",
+            "51a69e8f-c5e9-42b3-83d0-28af40353989",
+            "a0216ccf-b6ed-48c4-8d08-2b0f3bf1fa79",
+            "69840bb3-66d7-462d-b896-a6ccc7e4814a"
+          ]
+        },
+        "type": "dual_fuel_engine_gas_mode"
+      },
+      "tenant_id": "00e3b62b-ca7a-4fef-a9c8-7a915b758d85",
+      "vessel_id": "69840bb3-66d7-462d-b896-a6ccc7e4814a"
+    }
+  ],
+  "page_number": 1,
+  "page_size": 25,
+  "total_entries": 2,
+  "total_pages": 1
+}

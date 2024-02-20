@@ -1,0 +1,101 @@
+{
+  "entries": [
+    {
+      "comments": [],
+      "ended_at": "2023-05-24T17:00:00Z",
+      "id": "eb2ad9db-f539-4c18-b8e9-363ebcbeb7df",
+      "leg": {
+        "from": {
+          "id": "cb7d9335-ca5f-4ce2-accb-e40933acc258",
+          "name": "Duke Point Approach",
+          "type": "waypoint"
+        },
+        "to": {
+          "id": "a7af8dcd-6cf3-4f91-954b-fac33a74a4a7",
+          "name": "Berth 1",
+          "type": "port_dock"
+        }
+      },
+      "properties": {
+        "reasons": [
+          {
+            "disconnected_at": "2023-05-24T16:10:00.000Z",
+            "type": "disconnected_early",
+            "undocked_at": "2023-05-24T16:59:00.000Z"
+          },
+          {
+            "connected_at": "2023-05-24T12:16:00.000Z",
+            "docked_at": "2023-05-24T10:13:00.000Z",
+            "type": "connected_late"
+          }
+        ]
+      },
+      "started_at": "2023-05-24T10:04:00Z",
+      "statistics": {
+        "additional_emissions": 2.1791854628033964,
+        "additional_fuel_consumptions": [
+          {
+            "consumer_name": "DG 2",
+            "fuel_amount": {
+              "amount": 10.091999753316243,
+              "fuel_name": "MDO",
+              "unit": "l"
+            },
+            "source": "flow_meters"
+          },
+          {
+            "consumer_name": "DG 2",
+            "fuel_amount": {
+              "amount": 0.0,
+              "fuel_name": "LNG",
+              "unit": "GJ"
+            },
+            "source": "flow_meters"
+          },
+          {
+            "consumer_name": "DG 1",
+            "fuel_amount": {
+              "amount": 202.50399850209553,
+              "fuel_name": "MDO",
+              "unit": "l"
+            },
+            "source": "flow_meters"
+          },
+          {
+            "consumer_name": "DG 1",
+            "fuel_amount": {
+              "amount": 22.944999901453652,
+              "fuel_name": "LNG",
+              "unit": "GJ"
+            },
+            "source": "flow_meters"
+          }
+        ],
+        "duration_min": 416
+      },
+      "target": {
+        "id": "6ec596ed-a137-4d08-8f50-82df10a33de5",
+        "parameters": {
+          "max_connect_after": 15,
+          "max_disconnect_before": 15,
+          "vessel_ids": [
+            "b9d3340c-bb9e-428c-85d2-9869c934c5a8",
+            "51a69e8f-c5e9-42b3-83d0-28af40353989",
+            "a0216ccf-b6ed-48c4-8d08-2b0f3bf1fa79",
+            "69840bb3-66d7-462d-b896-a6ccc7e4814a"
+          ]
+        },
+        "type": "shore_power_utilization"
+      },
+      "tenant_id": "00e3b62b-ca7a-4fef-a9c8-7a915b758d85",
+      "vessel_id": "b9d3340c-bb9e-428c-85d2-9869c934c5a8",
+      "voyage": {
+        "number": "66787"
+      }
+    }
+  ],
+  "page_number": 1,
+  "page_size": 25,
+  "total_entries": 14,
+  "total_pages": 1
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "target": {
+      "deleted_at": null,
+      "id": "74c3bc71-0044-4640-bdc5-8f8112882c28",
+      "inserted_at": "2021-10-01T16:06:26.476013Z",
+      "parameters": {
+        "criteria": [
+          {
+            "predicate": "less_than",
+            "type": "fuel_oil",
+            "value": 20.0
+          }
+        ],
+        "time_window": "daily",
+        "timezone": "America/Vancouver",
+        "vessel_ids": [
+          "b9d3340c-bb9e-428c-85d2-9869c934c5a8",
+          "51a69e8f-c5e9-42b3-83d0-28af40353989",
+          "69840bb3-66d7-462d-b896-a6ccc7e4814a",
+          "a0216ccf-b6ed-48c4-8d08-2b0f3bf1fa79"
+        ]
+      },
+      "type": "energy_consumption"
+    }
+  }
+]
