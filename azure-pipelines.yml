@@ -1,0 +1,48 @@
+# Python package
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+strategy:
+  matrix:
+    Python38:
+      python.version: '3.8'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Use Python $(python.version)'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+# Before we run tests, we need to create the test fixtures
+- script: |
+    python create_test_fixtures.py
+  displayName: 'Create test fixtures'
+
+- script: |
+    pip install pytest pytest-azurepipelines pytest-cov
+    pytest --cov=curate_parquet --cov-report=xml tests/test_curate_parquet.py
+    ls
+  displayName: 'Run test curate parquet'
+
+- script: |
+    mv /home/vsts/work/1/s/coverage.xml  /home/vsts/work/1/s/coverage_report_1.xml
+    ls
+    pytest --cov=curate_parquet --cov-report=xml tests/test_logs_validations.py
+    ls
+  displayName: 'Run test_logs_validations'
+
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(Build.SourcesDirectory)/*.xml'
+    reportDirectory: '$(Build.SourcesDirectory)'
