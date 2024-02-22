@@ -1,0 +1,171 @@
+|Field|Value|
+|--|--|
+|**Status**|Draft|
+|**Version**| v0.1|
+|**Date**|13-Oct-2023|
+|**Technical owner**|Sarbjit Sarkaria|
+|**Business lead**|Yuri Fedoruk|
+|**Tickets**| #2185 <br>
+
+[[_TOC_]]
+
+# Overview
+
+This sub-page provides details of the tables and fields curated for the **Prism** dataset.
+
+## Source
+* `Source Type`: REST API
+* `URL`: https://prism.beaverlabs.net/api/performance
+* `Credentials`: contact @<Yuri Fedoruk> 
+
+## Sink
+* `Server`: _syn-smg-prod-ondemand.sql.azuresynapse.net_
+* `Database`: _silver_
+* `Credentials`: contact @<Yuri Fedoruk>
+
+_Ref_: [Runbook Prism](/Data-Ops-Wiki/Runbook-Prism)
+
+## Curated Data
+
+Except for the _Description_ column, the contents of the table below were generated
+ by running the query:
+
+    SELECT table_schema, Table_Name, column_Name, data_type FROM information_schema.columns WHERE TABLE_SCHEMA = 'prism'
+
+
+`TODO`: Add in descriptions of each field
+
+
+table_schema|Table_Name|column_Name|data_type| Description
+---|---|---|---|---
+prism|vw_MISSES_ENERGY_CONSUMPTION|ended_at|datetime2
+prism|vw_MISSES_ENERGY_CONSUMPTION|id|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|leg_from_id|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|leg_from_name|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|leg_from_type|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|leg_to_id|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|leg_to_name|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|leg_to_type|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|reason_actual_value|float
+prism|vw_MISSES_ENERGY_CONSUMPTION|reason_expected_value|float
+prism|vw_MISSES_ENERGY_CONSUMPTION|reason_predicate|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|reason_type|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|started_at|datetime2
+prism|vw_MISSES_ENERGY_CONSUMPTION|duration_min|bigint
+prism|vw_MISSES_ENERGY_CONSUMPTION|target_id|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|target_type|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|tenant_id|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|vessel_id|varchar
+prism|vw_MISSES_ENERGY_CONSUMPTION|voyage_number|varchar
+prism|vw_ADDITIONAL_FUEL_CONSUMPTION|id|varchar
+prism|vw_ADDITIONAL_FUEL_CONSUMPTION|started_at|datetime2
+prism|vw_ADDITIONAL_FUEL_CONSUMPTION|consumer_name|varchar
+prism|vw_ADDITIONAL_FUEL_CONSUMPTION|amount|float
+prism|vw_ADDITIONAL_FUEL_CONSUMPTION|fuel_name|varchar
+prism|vw_ADDITIONAL_FUEL_CONSUMPTION|unit|varchar
+prism|vw_ADDITIONAL_FUEL_CONSUMPTION|source|varchar
+prism|vw_TARGETS_DUAL_FUEL_ENGINE_GAS_MODE|deleted_at|datetime2
+prism|vw_TARGETS_DUAL_FUEL_ENGINE_GAS_MODE|id|varchar
+prism|vw_TARGETS_DUAL_FUEL_ENGINE_GAS_MODE|inserted_at|datetime2
+prism|vw_TARGETS_DUAL_FUEL_ENGINE_GAS_MODE|type|varchar
+prism|vw_TARGETS_DUAL_FUEL_ENGINE_GAS_MODE|vessel_id|varchar
+prism|vw_TARGETS_ENERGY_CONSUMPTION|deleted_at|datetime2
+prism|vw_TARGETS_ENERGY_CONSUMPTION|id|varchar
+prism|vw_TARGETS_ENERGY_CONSUMPTION|inserted_at|datetime2
+prism|vw_TARGETS_ENERGY_CONSUMPTION|type|varchar
+prism|vw_TARGETS_ENERGY_CONSUMPTION|criteria_predicate|varchar
+prism|vw_TARGETS_ENERGY_CONSUMPTION|criteria_type|varchar
+prism|vw_TARGETS_ENERGY_CONSUMPTION|criteria_value|float
+prism|vw_TARGETS_ENERGY_CONSUMPTION|time_window|varchar
+prism|vw_TARGETS_ENERGY_CONSUMPTION|timezone|varchar
+prism|vw_TARGETS_ENERGY_CONSUMPTION|vessel_id|varchar
+prism|vw_TARGETS_SHORE_POWER_UTILIZATION|deleted_at|datetime2
+prism|vw_TARGETS_SHORE_POWER_UTILIZATION|id|varchar
+prism|vw_TARGETS_SHORE_POWER_UTILIZATION|inserted_at|datetime2
+prism|vw_TARGETS_SHORE_POWER_UTILIZATION|max_connect_after|bigint
+prism|vw_TARGETS_SHORE_POWER_UTILIZATION|max_disconnect_before|bigint
+prism|vw_TARGETS_SHORE_POWER_UTILIZATION|type|varchar
+prism|vw_TARGETS_SHORE_POWER_UTILIZATION|vessel_id|varchar
+prism|vw_STATISTICS|unique_id|varchar
+prism|vw_STATISTICS|interval_end|datetime2
+prism|vw_STATISTICS|interval_start|datetime2
+prism|vw_STATISTICS|ratio|float
+prism|vw_STATISTICS|running_hours_on_at_least_one_engine|float
+prism|vw_STATISTICS|running_hours_on_two_engines|float
+prism|vw_STATISTICS|vessel_id|varchar
+prism|vw_STATISTICS|imo_number|bigint
+prism|vw_VOYAGES|completed_at|datetime2
+prism|vw_VOYAGES|from_port_id|varchar
+prism|vw_VOYAGES|id|varchar
+prism|vw_VOYAGES|inserted_at|datetime2
+prism|vw_VOYAGES|number|varchar
+prism|vw_VOYAGES|started_at|datetime2
+prism|vw_VOYAGES|distance|float
+prism|vw_VOYAGES|duration|bigint
+prism|vw_VOYAGES|running_hours_on_all_engines|float
+prism|vw_VOYAGES|running_hours_on_at_least_one_engine|float
+prism|vw_VOYAGES|total_emissions|float
+prism|vw_VOYAGES|fuel_consumer_name|varchar
+prism|vw_VOYAGES|fuel_source|varchar
+prism|vw_VOYAGES|fuel_amount|float
+prism|vw_VOYAGES|fuel_unit|varchar
+prism|vw_VOYAGES|energy_amount|float
+prism|vw_VOYAGES|energy_source|varchar
+prism|vw_VOYAGES|energy_consumer_name|varchar
+prism|vw_VOYAGES|twin_engines_ratio|float
+prism|vw_VOYAGES|voyage_id|varchar
+prism|vw_VOYAGES|statistics_generated_at|datetime2
+prism|vw_VOYAGES|to_port_id|varchar
+prism|vw_VOYAGES|updated_at|datetime2
+prism|vw_VOYAGES|vessel_id|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|ended_at_UTC|datetime2
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|ended_at_PST|datetimeoffset
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|id|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|leg_from_id|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|leg_from_name|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|leg_from_type|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|leg_to_id|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|leg_to_name|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|leg_to_type|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|properties_engine|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|started_at_UTC|datetime2
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|started_at_PST|datetimeoffset
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|duration_min|bigint
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|consumer_name|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|fuel_amount|float
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|fuel_name|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|fuel_unit|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|source|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|fuel_oil_emissions|float
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|target_id|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|target_type|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|tenant_id|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|vessel_id|varchar
+prism|vw_MISSES_DUAL_FUEL_ENGINE_GAS_MODE|voyage_number|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|ended_at_UTC|datetime2
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|ended_at_PST|datetimeoffset
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|id|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|leg_from_id|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|leg_from_name|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|leg_from_type|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|leg_to_id|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|leg_to_name|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|leg_to_type|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|disconnected_at_UTC|datetime2
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|disconnected_at_PST|datetimeoffset
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|undocked_at_UTC|datetime2
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|undocked_at_PST|datetimeoffset
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|reasons_type|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|connected_at_UTC|datetime2
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|connected_at_PST|datetimeoffset
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|docked_at_UTC|datetime2
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|docked_at_PST|datetimeoffset
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|started_at_UTC|datetime2
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|started_at_PST|datetimeoffset
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|additional_emissions|float
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|duration_min|bigint
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|target_id|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|target_type|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|tenant_id|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|vessel_id|varchar
+prism|vw_MISSES_SHORE_POWER_UTILIZATION|voyage_number|varchar
